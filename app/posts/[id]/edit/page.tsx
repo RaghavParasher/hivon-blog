@@ -50,7 +50,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     if (user) {
       fetchPost();
     }
-  }, [params.id, user, profile, router]);
+  }, [postId, user, profile, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,14 +58,14 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     setError(null);
 
     try {
-      const result = await updatePost(params.id, {
+      const result = await updatePost(postId, {
         title,
         body: content,
         image_url: imageUrl,
       });
 
       if (result.success) {
-        router.push(`/posts/${params.id}`);
+        router.push(`/posts/${postId}`);
       } else {
         setError(result.error || "Failed to update post");
       }
