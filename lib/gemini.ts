@@ -4,7 +4,8 @@ const apiKey = process.env.GOOGLE_AI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function generateSummary(text: string) {
-  const models = ["gemini-2.0-flash", "gemini-1.5-flash"];
+  // Try classic model names that are more likely to be available in all regions/accounts
+  const models = ["gemini-1.5-flash", "gemini-pro", "gemini-1.5-flash-latest"];
   let lastError = "Unknown error";
   
   for (const modelName of models) {
@@ -30,6 +31,10 @@ export async function generateSummary(text: string) {
     }
   }
 
-  // Final fallback now shows the real error for debugging
+  // Final fallback with more info
+  if (apiKey === "") {
+    lastError = "API Key is missing in environment variables";
+  }
+  
   return `[AI Error: ${lastError}] This post explores ` + text.substring(0, 150).replace(/[^\w\s]|[\n\r]/g, " ") + "...";
 }
