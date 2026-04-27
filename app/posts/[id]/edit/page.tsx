@@ -87,7 +87,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
   return (
     <ProtectedRoute allowedRoles={['Author', 'Admin']}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <Link href={`/posts/${params.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+        <Link href={`/posts/${postId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           <ArrowLeft size={16} /> Cancel and back to post
         </Link>
 
