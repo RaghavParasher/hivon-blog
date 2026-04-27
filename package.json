@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@supabase/supabase-js": "^2.104.1",
-    "lucide-react": "^1.11.0",
-    "next": "^15.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@supabase/supabase-js": "^2.10.0",
+    "lucide-react": "^0.453.0",
+    "next": "15.0.0",
+    "react": "19.0.0-rc-6632c58a-20241024",
+    "react-dom": "19.0.0-rc-6632c58a-20241024"
   },
   "devDependencies": {
     "@types/node": "^20",
