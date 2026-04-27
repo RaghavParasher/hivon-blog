@@ -83,4 +83,4 @@ This project was developed using **Antigravity**, an agentic AI coding assistant
 - **RBAC Sync**: To ensure the application roles synced perfectly with the database, I implemented a `fetchProfile` trigger in the `AuthContext` to ensure the UI always reflects the user's latest permissions.
 
 ---
-**Built with ❤️ by [Your Name] for Hivon Automations.**
+**Built with ❤️ by Raghav Parasher for Hivon Automations.**
