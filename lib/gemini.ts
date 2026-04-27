@@ -5,10 +5,10 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function generateSummary(text: string) {
   const models = ["gemini-2.0-flash", "gemini-1.5-flash"];
+  let lastError = "Unknown error";
   
   for (const modelName of models) {
     try {
-      console.log(`Attempting summary with ${modelName}...`);
       const model = genAI.getGenerativeModel({ model: modelName });
       
       const prompt = `Write a professional, engaging summary of the following blog post. 
@@ -26,10 +26,10 @@ export async function generateSummary(text: string) {
       }
     } catch (error: any) {
       console.error(`Model ${modelName} failed:`, error.message);
-      // Continue to the next model in the list
+      lastError = error.message;
     }
   }
 
-  // Final text-based fallback if all AI models fail
-  return "This post explores " + text.substring(0, 150).replace(/[^\w\s]|[\n\r]/g, " ") + "... [AI Summary temporarily unavailable]";
+  // Final fallback now shows the real error for debugging
+  return `[AI Error: ${lastError}] This post explores ` + text.substring(0, 150).replace(/[^\w\s]|[\n\r]/g, " ") + "...";
 }
