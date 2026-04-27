@@ -1,37 +1,42 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const apiKey = process.env.GOOGLE_AI_API_KEY || "";
-const genAI = new GoogleGenerativeAI(apiKey);
+// Trim any accidental whitespace from the environment variable
+const apiKey = (process.env.GOOGLE_AI_API_KEY || "").trim();
 
 export async function generateSummary(text: string) {
-  let lastError = "Unknown error";
-  let availableModels: string[] = [];
-
-  try {
-    // Attempt to list available models to see what this key can do
-    // Note: Some keys might not have permission to list models
-    // but we can try it for debugging
-    // @ts-ignore
-    const modelList = await genAI.getGenerativeModel({ model: "gemini-pro" }).listModels();
-    // @ts-ignore
-    availableModels = modelList.models.map((m: any) => m.name);
-  } catch (e) {
-    availableModels = ["Could not list models"];
+  if (!apiKey || apiKey === "your_gemini_key") {
+    return "[AI Error: GOOGLE_AI_API_KEY is empty or not set in Vercel Settings]";
   }
 
-  const modelsToTry = ["gemini-1.5-flash", "gemini-pro", "gemini-1.5-flash-latest"];
+  const genAI = new GoogleGenerativeAI(apiKey);
   
-  for (const modelName of modelsToTry) {
+  // Trying the most likely 2.0 and 1.5 model names in order
+  const models = ["gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-pro"];
+  let lastError = "None";
+
+  for (const modelName of models) {
     try {
+      console.log(`Attempting summary with ${modelName}...`);
       const model = genAI.getGenerativeModel({ model: modelName });
-      const prompt = `Summarize: ${text}`;
+      
+      const prompt = `Write a professional, engaging summary of the following blog post. 
+      The summary should be around 150-200 words long and highlight the main takeaways.
+      
+      Blog Post Content:
+      ${text}`;
+      
       const result = await model.generateContent(prompt);
       const response = await result.response;
-      return response.text();
+      const summaryText = response.text();
+      
+      if (summaryText && summaryText.length > 10) {
+        return summaryText;
+      }
     } catch (error: any) {
+      console.error(`Model ${modelName} failed:`, error.message);
       lastError = error.message;
     }
   }
 
-  return `[AI Error: ${lastError}] [Allowed Models: ${availableModels.join(", ")}] Content: ${text.substring(0, 50)}...`;
+  return `[AI Error: ${lastError}] (Check if 'Generative Language API' is enabled for this key) Content: ${text.substring(0, 50)}...`;
 }
