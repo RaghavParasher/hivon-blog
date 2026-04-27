@@ -6,6 +6,8 @@ import CommentSection from "@/lib/components/CommentSection";
 import { getComments } from "@/lib/actions/comments";
 import PostActions from "@/lib/components/PostActions";
 
+export const dynamic = "force-dynamic";
+
 export default async function PostPage({ params }: { params: { id: string } }) {
   const { id } = params;
 

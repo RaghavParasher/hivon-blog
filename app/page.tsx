@@ -2,6 +2,8 @@ import Link from "next/link";
 import { MoveRight, Sparkles, Clock, User } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   // Fetch latest 3 posts from Supabase
   const { data: posts, error } = await supabase

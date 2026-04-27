@@ -3,6 +3,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import SearchInput from "@/lib/components/SearchInput";
 
+export const dynamic = "force-dynamic";
+
 export default async function PostsPage({
   searchParams,
 }: {
