@@ -8,10 +8,11 @@ export const dynamic = "force-dynamic";
 export default async function PostsPage({
   searchParams,
 }: {
-  searchParams: { q?: string; page?: string };
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const query = searchParams.q || "";
-  const page = parseInt(searchParams.page || "1");
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.q || "";
+  const page = parseInt(resolvedSearchParams.page || "1");
   const limit = 6;
   const offset = (page - 1) * limit;
 

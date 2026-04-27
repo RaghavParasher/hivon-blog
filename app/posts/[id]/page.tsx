@@ -8,8 +8,8 @@ import PostActions from "@/lib/components/PostActions";
 
 export const dynamic = "force-dynamic";
 
-export default async function PostPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   // Fetch Post Data
   const { data: post, error } = await supabase

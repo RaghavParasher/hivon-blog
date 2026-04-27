@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import ProtectedRoute from "@/lib/components/ProtectedRoute";
 import { Sparkles, Save, Image as ImageIcon, Type, Loader2, ArrowLeft } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import { updatePost } from "@/lib/actions/posts";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,8 @@ import { supabase } from "@/lib/supabase";
 import ImageUpload from "@/lib/components/ImageUpload";
 import Link from "next/link";
 
-export default function EditPostPage({ params }: { params: { id: string } }) {
+export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: postId } = React.use(params);
   const { user, profile } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -25,7 +26,7 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
       const { data, error } = await supabase
         .from("posts")
         .select("*")
-        .eq("id", params.id)
+        .eq("id", postId)
         .single();
 
       if (error || !data) {
