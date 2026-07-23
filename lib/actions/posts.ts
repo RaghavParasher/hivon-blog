@@ -49,8 +49,7 @@ export async function createPost(formData: {
     // 4. Generate AI Summary asynchronously in the background (non-blocking)
     generateSummary(formData.body).then(async (summary) => {
       if (summary && !summary.startsWith("[AI Error")) {
-        const serverSupabase = await createClient();
-        await serverSupabase
+        await supabase
           .from("posts")
           .update({ summary })
           .eq("id", post.id);
