@@ -33,24 +33,6 @@ export default function SignupPage() {
       if (authError) throw authError;
 
       if (data.user) {
-        // Create user profile in the 'users' table
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert([
-            {
-              id: data.user.id,
-              name: name,
-              email: email,
-              role: 'Viewer', // Default role
-            },
-          ]);
-
-        if (profileError) {
-          console.error("Error creating profile:", profileError);
-          // Even if profile creation fails, the auth user is created.
-          // We might want to show a warning or handle this differently in a real app.
-        }
-
         // Successful signup
         alert("Registration successful! Please check your email for verification (if enabled).");
         router.push("/login");

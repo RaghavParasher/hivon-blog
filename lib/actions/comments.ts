@@ -1,20 +1,29 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function addComment(formData: {
   post_id: string;
-  user_id: string;
   comment_text: string;
+  user_id?: string;
 }) {
   try {
+    const supabase = await createClient();
+
+    // 1. Verify Authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return { success: false, error: "Unauthorized: Please log in." };
+    }
+
+    // 2. Insert Comment using caller's verified user_id
     const { data, error } = await supabase
       .from("comments")
       .insert([
         {
           post_id: formData.post_id,
-          user_id: formData.user_id,
+          user_id: user.id, // Enforce authenticated user id
           comment_text: formData.comment_text,
         },
       ])
@@ -33,6 +42,7 @@ export async function addComment(formData: {
 
 export async function getComments(postId: string) {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("comments")
       .select(`
