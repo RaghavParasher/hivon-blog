@@ -43,15 +43,53 @@ export default function LoginPage() {
     setPassword(demoPassword);
 
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      // 1. Try to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: demoEmail,
         password: demoPassword,
       });
 
-      if (authError) throw authError;
+      if (!signInError) {
+        router.push("/");
+        router.refresh();
+        return;
+      }
 
-      router.push("/");
-      router.refresh();
+      // 2. If it failed due to invalid credentials, register the demo user on-the-fly
+      if (signInError.message.includes("Invalid login credentials") || signInError.status === 400) {
+        console.log(`Demo account ${demoEmail} not found. Registering on-the-fly...`);
+        const nameMap: Record<string, string> = {
+          'admin@hivon.com': 'Demo Admin',
+          'author@hivon.com': 'Demo Author',
+          'viewer@hivon.com': 'Demo Viewer',
+        };
+        const demoName = nameMap[demoEmail] || 'Demo User';
+
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: demoEmail,
+          password: demoPassword,
+          options: {
+            data: {
+              full_name: demoName,
+            },
+          },
+        });
+
+        if (signUpError) throw signUpError;
+
+        // Try to sign in again after registering
+        const { error: retrySignInError } = await supabase.auth.signInWithPassword({
+          email: demoEmail,
+          password: demoPassword,
+        });
+
+        if (retrySignInError) throw retrySignInError;
+
+        router.push("/");
+        router.refresh();
+      } else {
+        throw signInError;
+      }
     } catch (err: any) {
       setError(err.message || "Failed to sign in with demo account");
     } finally {

@@ -100,17 +100,29 @@ CREATE POLICY "Users can delete own comments" ON comments
   );
 
 -- ======================================================
--- AUTOMATIC PROFILE CREATION TRIGGER
+-- 3. SETUP AUTOMATIC PROFILE CREATION TRIGGER
 -- ======================================================
+
+-- Trigger function to automatically copy new auth.users into our public.users table
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  assigned_role user_role;
 BEGIN
+  IF new.email = 'admin@hivon.com' THEN
+    assigned_role := 'Admin'::user_role;
+  ELSIF new.email = 'author@hivon.com' THEN
+    assigned_role := 'Author'::user_role;
+  ELSE
+    assigned_role := 'Viewer'::user_role;
+  END IF;
+
   INSERT INTO public.users (id, name, email, role)
   VALUES (
     new.id,
     COALESCE(new.raw_user_meta_data->>'full_name', 'User'),
     new.email,
-    'Viewer'::user_role
+    assigned_role
   );
   RETURN new;
 END;
