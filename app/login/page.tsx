@@ -36,6 +36,29 @@ export default function LoginPage() {
     }
   };
 
+  const handleDemoLogin = async (demoEmail: string, demoPassword: string) => {
+    setLoading(true);
+    setError(null);
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+
+    try {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      });
+
+      if (authError) throw authError;
+
+      router.push("/");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in with demo account");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ maxWidth: '450px', margin: '0 auto', width: '100%' }}>
       <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
@@ -137,6 +160,41 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <div style={{ marginTop: '2rem', borderTop: '1px solid var(--glass-border)', paddingTop: '1.5rem' }}>
+          <p className="text-muted" style={{ textAlign: 'center', fontSize: '0.85rem', marginBottom: '1rem' }}>
+            Quick Demo Access (One-Click)
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('admin@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="btn-secondary"
+              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
+            >
+              Admin
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('author@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="btn-secondary"
+              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
+            >
+              Author
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('viewer@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="btn-secondary"
+              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
+            >
+              Viewer
+            </button>
+          </div>
+        </div>
 
         <p style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
           Don't have an account? <Link href="/signup" style={{ color: 'var(--primary)', fontWeight: '600' }}>Create one</Link>
