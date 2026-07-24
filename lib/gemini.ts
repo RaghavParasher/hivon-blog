@@ -8,8 +8,8 @@ export async function generateSummary(text: string) {
 
   const genAI = new GoogleGenerativeAI(apiKey);
   
-  // Trying the most likely 2.0 and 1.5 model names in order
-  const models = ["gemini-2.0-flash-exp", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-pro"];
+  // Trying the most likely 1.5 and 2.0 model names in order (prioritizing 1.5 flash)
+  const models = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-2.0-flash", "gemini-pro"];
   let lastError = "None";
 
   for (const modelName of models) {
