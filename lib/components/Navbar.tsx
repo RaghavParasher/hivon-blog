@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar-content">
         <Link href="/" className="logo">
-          HIVON BLOG
+          Chronicle AI
         </Link>
         <div className="nav-links">
           <Link href="/" className="nav-link">Home</Link>

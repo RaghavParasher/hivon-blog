@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, MoveRight, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
+import { Mail, Lock, MoveRight, ArrowLeft, Loader2, AlertCircle, Shield, PenTool, Eye } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -125,6 +125,103 @@ export default function LoginPage() {
           </div>
         )}
 
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem' }}>
+          <p className="text-muted" style={{ fontSize: '0.8rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+            Quick Demo Access (One-Click)
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('admin@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="glass-card"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '1.25rem', 
+                padding: '1.25rem', 
+                width: '100%', 
+                textAlign: 'left', 
+                cursor: 'pointer',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--glass-border)',
+                transition: 'all 0.2s ease',
+                color: 'white'
+              }}
+            >
+              <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.75rem', borderRadius: '10px', display: 'flex' }}>
+                <Shield size={20} />
+              </div>
+              <div>
+                <p style={{ fontWeight: '600', fontSize: '0.95rem', margin: 0 }}>Login as Admin</p>
+                <p className="text-muted" style={{ fontSize: '0.75rem', margin: '0.2rem 0 0' }}>Manage all posts, comments, and users</p>
+              </div>
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('author@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="glass-card"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '1.25rem', 
+                padding: '1.25rem', 
+                width: '100%', 
+                textAlign: 'left', 
+                cursor: 'pointer',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--glass-border)',
+                transition: 'all 0.2s ease',
+                color: 'white'
+              }}
+            >
+              <div style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--primary)', padding: '0.75rem', borderRadius: '10px', display: 'flex' }}>
+                <PenTool size={20} />
+              </div>
+              <div>
+                <p style={{ fontWeight: '600', fontSize: '0.95rem', margin: 0 }}>Login as Author</p>
+                <p className="text-muted" style={{ fontSize: '0.75rem', margin: '0.2rem 0 0' }}>Create and edit your own blog posts</p>
+              </div>
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => handleDemoLogin('viewer@hivon.com', 'Password123!')}
+              disabled={loading}
+              className="glass-card"
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '1.25rem', 
+                padding: '1.25rem', 
+                width: '100%', 
+                textAlign: 'left', 
+                cursor: 'pointer',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--glass-border)',
+                transition: 'all 0.2s ease',
+                color: 'white'
+              }}
+            >
+              <div style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '0.75rem', borderRadius: '10px', display: 'flex' }}>
+                <Eye size={20} />
+              </div>
+              <div>
+                <p style={{ fontWeight: '600', fontSize: '0.95rem', margin: 0 }}>Login as Viewer</p>
+                <p className="text-muted" style={{ fontSize: '0.75rem', margin: '0.2rem 0 0' }}>Browse stories and write comments</p>
+              </div>
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0 0.5rem' }}>
+            <div style={{ flexGrow: 1, height: '1px', background: 'var(--glass-border)' }}></div>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Or Use Credentials</span>
+            <div style={{ flexGrow: 1, height: '1px', background: 'var(--glass-border)' }}></div>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <label style={{ fontSize: '0.9rem', fontWeight: '500' }}>Email Address</label>
@@ -199,40 +296,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ marginTop: '2rem', borderTop: '1px solid var(--glass-border)', paddingTop: '1.5rem' }}>
-          <p className="text-muted" style={{ textAlign: 'center', fontSize: '0.85rem', marginBottom: '1rem' }}>
-            Quick Demo Access (One-Click)
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
-            <button 
-              type="button"
-              onClick={() => handleDemoLogin('admin@hivon.com', 'Password123!')}
-              disabled={loading}
-              className="btn-secondary"
-              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
-            >
-              Admin
-            </button>
-            <button 
-              type="button"
-              onClick={() => handleDemoLogin('author@hivon.com', 'Password123!')}
-              disabled={loading}
-              className="btn-secondary"
-              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
-            >
-              Author
-            </button>
-            <button 
-              type="button"
-              onClick={() => handleDemoLogin('viewer@hivon.com', 'Password123!')}
-              disabled={loading}
-              className="btn-secondary"
-              style={{ padding: '0.5rem 0.25rem', fontSize: '0.8rem', justifyContent: 'center', width: '100%' }}
-            >
-              Viewer
-            </button>
-          </div>
-        </div>
+
 
         <p style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
           Don't have an account? <Link href="/signup" style={{ color: 'var(--primary)', fontWeight: '600' }}>Create one</Link>
