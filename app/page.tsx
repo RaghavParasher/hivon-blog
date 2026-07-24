@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MoveRight, Sparkles, Clock, User } from "lucide-react";
+import { MoveRight, Sparkles, Clock, User, TrendingUp } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +45,37 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: '1rem 0' }}>
+        <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>How It Works</h2>
+          <p className="text-muted">Three simple steps to publish intelligent, summarized content.</p>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' }}>
+          <div className="glass-card" style={{ flex: '1 1 300px', padding: '2rem', display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--accent-gradient)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', flexShrink: 0 }}>1</div>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', fontWeight: '600' }}>Draft Your Story</h3>
+              <p className="text-muted" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>Write your post content in our modern editor, complete with rich formatting and cover images.</p>
+            </div>
+          </div>
+          <div className="glass-card" style={{ flex: '1 1 300px', padding: '2rem', display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--accent-gradient)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', flexShrink: 0 }}>2</div>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', fontWeight: '600' }}>AI Synthesizer</h3>
+              <p className="text-muted" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>Google Gemini analyzes your writing and automatically generates an accurate, high-quality summary.</p>
+            </div>
+          </div>
+          <div className="glass-card" style={{ flex: '1 1 300px', padding: '2rem', display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--accent-gradient)', color: 'white', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', flexShrink: 0 }}>3</div>
+            <div>
+              <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', fontWeight: '600' }}>Publish Securely</h3>
+              <p className="text-muted" style={{ fontSize: '0.9rem', lineHeight: '1.5' }}>Deploy your posts to the database instantly. Permissions protect editing keys automatically.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
         <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
@@ -79,6 +110,39 @@ export default async function Home() {
               Enjoy a gorgeous glassmorphic interface built with modern dark mode tokens, smooth transitions, and premium responsive layouts.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Trending Topics Section */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+        <div>
+          <h2 style={{ fontSize: '2.25rem', marginBottom: '0.5rem' }}>Explore Trending Topics</h2>
+          <p className="text-muted">Find content that inspires you across popular categories.</p>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          {['Technology', 'Artificial Intelligence', 'Software Design', 'Creative Writing', 'Productivity', 'Future Trends'].map((topic, i) => (
+            <Link 
+              key={i} 
+              href={`/posts?search=${encodeURIComponent(topic)}`} 
+              className="glass-card" 
+              style={{ 
+                padding: '0.75rem 1.5rem', 
+                borderRadius: '50px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem', 
+                fontSize: '0.9rem',
+                color: 'white',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--glass-border)',
+                transition: 'all 0.2s ease',
+                textDecoration: 'none'
+              }}
+            >
+              <TrendingUp size={14} style={{ color: 'var(--accent)' }} />
+              <span>{topic}</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -147,32 +211,61 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="glass-card" style={{ padding: '4rem 3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center', maxWidth: '750px', margin: '0 auto', width: '100%', background: 'rgba(255, 255, 255, 0.01)' }}>
-        <h2 style={{ fontSize: '2.25rem', margin: 0 }}>Subscribe to the Chronicle</h2>
-        <p className="text-muted" style={{ maxWidth: '500px', margin: '0 auto', fontSize: '1.05rem', lineHeight: '1.6' }}>
-          Get weekly summaries of the best tech and creative stories delivered straight to your inbox.
-        </p>
-        <form style={{ display: 'flex', gap: '0.75rem', maxWidth: '500px', width: '100%', margin: '1.5rem auto 0' }}>
-          <input 
-            type="email" 
-            placeholder="Enter your email address" 
-            required 
-            style={{
-              flexGrow: 1,
-              padding: '0.75rem 1.25rem',
-              borderRadius: '8px',
-              border: '1px solid var(--glass-border)',
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: 'white',
-              outline: 'none',
-              fontSize: '1rem'
-            }}
-          />
-          <button type="submit" className="btn-primary" style={{ cursor: 'pointer' }}>
-            Subscribe
-          </button>
-        </form>
+      {/* FAQ Section Accordion */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '3rem', maxWidth: '800px', margin: '0 auto', width: '100%', paddingBottom: '2rem' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>Frequently Asked Questions</h2>
+          <p className="text-muted">Everything you need to know about the Chronicle AI blogging platform.</p>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[
+            {
+              q: "How does the AI summarization work?",
+              a: "When you write a post, our backend triggers the Google Gemini 2.0 model, sending your text to generate a concise summary. If the API key is unconfigured or hits a limit, our local parser automatically generates a summary so your feed never breaks."
+            },
+            {
+              q: "What is the role of Admins vs. Authors?",
+              a: "Viewers can read and comment. Authors can write and manage their own posts. Admins have a dedicated Dashboard where they can moderate all posts and delete comments in real-time."
+            },
+            {
+              q: "Is my content secure?",
+              a: "Yes. PostgreSQL Row Level Security (RLS) is active on your Supabase tables. This enforces that only logged-in Authors can modify their own content, and only Admins have absolute deletion access."
+            },
+            {
+              q: "How do I access the demo accounts?",
+              a: "Simply click 'Login' in the navbar, and click any of the large demo role cards (Admin, Author, or Viewer) at the top of the sign-in container. You will be logged in immediately."
+            }
+          ].map((faq, i) => (
+            <details 
+              key={i} 
+              className="glass-card" 
+              style={{ 
+                padding: '1.25rem 1.5rem', 
+                border: '1px solid var(--glass-border)',
+                background: 'rgba(255, 255, 255, 0.01)',
+                cursor: 'pointer',
+                borderRadius: '12px'
+              }}
+            >
+              <summary style={{ 
+                fontWeight: '600', 
+                fontSize: '1.05rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                color: 'white',
+                outline: 'none',
+                listStyle: 'none'
+              }}>
+                <span>{faq.q}</span>
+                <span style={{ color: 'var(--accent)', transition: 'transform 0.2s ease' }}>▾</span>
+              </summary>
+              <p className="text-muted" style={{ marginTop: '1rem', fontSize: '0.95rem', lineHeight: '1.6', cursor: 'default' }}>
+                {faq.a}
+              </p>
+            </details>
+          ))}
+        </div>
       </section>
     </div>
   );
