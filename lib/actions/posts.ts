@@ -31,7 +31,16 @@ export async function createPost(formData: {
       return { success: false, error: "Forbidden: Only Authors or Admins can create posts." };
     }
 
-    // 3. Insert Post
+    // 3. Generate AI Summary synchronously
+    let summary = null;
+    try {
+      summary = await generateSummary(formData.body);
+    } catch (geminiError) {
+      console.error("Gemini AI summary generation failed:", geminiError);
+      summary = `[AI Error: ${geminiError instanceof Error ? geminiError.message : String(geminiError)}]`;
+    }
+
+    // 4. Insert Post with Summary
     const { data: post, error: insertError } = await supabase
       .from("posts")
       .insert([
@@ -40,6 +49,7 @@ export async function createPost(formData: {
           body: formData.body,
           image_url: formData.image_url,
           author_id: user.id, // Enforce logged-in user as author
+          summary: summary,
         },
       ])
       .select()
@@ -47,46 +57,9 @@ export async function createPost(formData: {
 
     if (insertError) throw insertError;
 
-    // 4. Retrieve session access token to run background database updates safely
-    const { data: { session } } = await supabase.auth.getSession();
-    const accessToken = session?.access_token;
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
-
-    // Create a static client with headers so it does not touch dynamic Next.js cookies outside request context
-    const bgSupabase = accessToken
-      ? createSupabaseClient(supabaseUrl, supabaseAnonKey, {
-          global: {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        })
-      : supabase;
-
-    // 5. Generate AI Summary asynchronously in the background (non-blocking)
-    generateSummary(formData.body).then(async (summary) => {
-      if (summary) {
-        const { error: updateError } = await bgSupabase
-          .from("posts")
-          .update({ summary })
-          .eq("id", post.id);
-
-        if (updateError) {
-          console.error("Database update error for AI summary:", updateError);
-        } else {
-          // Revalidate cache to display summary immediately on next load
-          revalidatePath(`/posts/${post.id}`);
-          revalidatePath("/posts");
-          revalidatePath("/");
-        }
-      }
-    }).catch(err => {
-      console.error("Error generating AI summary in background:", err);
-    });
-
     revalidatePath("/");
     revalidatePath("/posts");
+    revalidatePath(`/posts/${post.id}`);
 
     return { success: true, postId: post.id };
   } catch (error: any) {

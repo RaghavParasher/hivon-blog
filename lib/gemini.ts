@@ -1,11 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Trim any accidental whitespace from the environment variable
-const apiKey = (process.env.GOOGLE_AI_API_KEY || "").trim();
-
 export async function generateSummary(text: string) {
+  const apiKey = (process.env.GOOGLE_AI_API_KEY || "").trim();
   if (!apiKey || apiKey === "your_gemini_key") {
-    return "[AI Error: GOOGLE_AI_API_KEY is empty or not set in Vercel Settings]";
+    return "[AI Error: GOOGLE_AI_API_KEY is empty or not set]";
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
