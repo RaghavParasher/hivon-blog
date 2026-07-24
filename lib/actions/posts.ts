@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { generateSummary } from "@/lib/gemini";
 import { revalidatePath } from "next/cache";
 
@@ -46,13 +47,39 @@ export async function createPost(formData: {
 
     if (insertError) throw insertError;
 
-    // 4. Generate AI Summary asynchronously in the background (non-blocking)
+    // 4. Retrieve session access token to run background database updates safely
+    const { data: { session } } = await supabase.auth.getSession();
+    const accessToken = session?.access_token;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
+
+    // Create a static client with headers so it does not touch dynamic Next.js cookies outside request context
+    const bgSupabase = accessToken
+      ? createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+          global: {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+        })
+      : supabase;
+
+    // 5. Generate AI Summary asynchronously in the background (non-blocking)
     generateSummary(formData.body).then(async (summary) => {
       if (summary) {
-        await supabase
+        const { error: updateError } = await bgSupabase
           .from("posts")
           .update({ summary })
           .eq("id", post.id);
+
+        if (updateError) {
+          console.error("Database update error for AI summary:", updateError);
+        } else {
+          // Revalidate cache to display summary immediately on next load
+          revalidatePath(`/posts/${post.id}`);
+          revalidatePath("/posts");
+          revalidatePath("/");
+        }
       }
     }).catch(err => {
       console.error("Error generating AI summary in background:", err);
