@@ -4,6 +4,10 @@ Chronicle AI is a state-of-the-art, full-stack blogging platform. Engineered for
 
 🚀 **Live Deployment Link:** [https://chronicle--ai.vercel.app/](https://chronicle--ai.vercel.app/)
 
+<br/>
+<img src="./mockup.jpg" width="100%" alt="Chronicle AI Dashboard Mockup" />
+<br/>
+
 ---
 
 ## 🛠️ Tech Stack & Badges
